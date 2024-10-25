@@ -1,2 +1,6 @@
 venv
-Zone.Identifier
+**/*Zone.Identifier
+
+# keep the results folder, but not the contents
+results/*
+!results/README.md

@@ -2,17 +2,24 @@
 
 from spire.xls import *
 from spire.xls.common import *
-from spire.doc.common import *
+from spire.xls import FileFormat as XlsxFileFormat
+
 from spire.doc import *
+from spire.doc.common import *
+from spire.doc import FileFormat as DocxFileFormat
 
 from pathlib import Path
+import threading
 
 excel_file_path = Path("sample_xlsx.xlsx")
-doc_file_path = Path("sample_doc.doc")
+docx_file_path = Path("sample_doc.docx")
+docx_pdf_path = Path('sample_doc_pdf.pdf')
+
+logo_path = Path('./MainLogo.png')
+font_path = Path('./fonts')
 
 
 def spire_doc_test() -> None:
-
     # Initialize a document
     doc = Document()
 
@@ -61,7 +68,7 @@ def spire_doc_test() -> None:
     cell_paragraph.Format.HorizontalAlignment = HorizontalAlignment.Right
     cell_paragraph.ChildObjects.Clear()
 
-    appended_pic = cell_paragraph.AppendPicture("MainLogo.png")
+    appended_pic = cell_paragraph.AppendPicture(str(logo_path))
 
     # Apply format to the paragraph
     cell_paragraph.Format.HorizontalAlignment = HorizontalAlignment.Left
@@ -75,7 +82,7 @@ def spire_doc_test() -> None:
     table.TableFormat.Borders.BorderType = BorderStyle.Single
 
     # Set a picture to the paragraph (stubbed with a test path)
-    logo_doc_picture = section.AddParagraph().AppendPicture("test_image.png")
+    logo_doc_picture = section.AddParagraph().AppendPicture(str(logo_path))
     logo_doc_picture.Height = 80
     logo_doc_picture.Width = 115
 
@@ -105,55 +112,68 @@ def spire_doc_test() -> None:
     cell.CellFormat.BackColor = Color.FromArgb(alpha=1, red=216, green=216, blue=216)
     cell.SetCellWidth(100 / 2, CellWidthType.Percentage)
     cell_paragraph = cell.AddParagraph()
-    ogo_doc_picture = cell_paragraph.AppendPicture("MainLogo.png")
+    logo_doc_picture = cell_paragraph.AppendPicture(str(logo_path))
 
     # Add signature image (stubbed with base64 data)
     signature_paragraph = section.AddParagraph()
-    signature_image = signature_paragraph.AppendPicture("test_image.png")
+    signature_image = signature_paragraph.AppendPicture(str(logo_path))
     signature_image.Height = 60
 
     # Save the document
-    doc.SaveToFile("test_output.docx", FileFormat.Docx2013)
+    doc.SaveToFile(str(docx_file_path), DocxFileFormat.Docx2013)
+    doc.Close()
+    doc.Dispose()
 
     # Load the document and save it as PDF
     pdf_doc = Document()
-    pdf_doc.LoadFromFile("test_output.docx")
+    pdf_doc.LoadFromFile(str(docx_file_path))
 
     ppl = ToPdfParameterList()
     ppl.IsEmbeddedAllFonts = True
     ppl.PrivateFontPaths = [PrivateFontPath("Muli", "Muli-Regular.ttf")]
-    pdf_doc.SaveToFile("test_output.pdf", ppl)
+    pdf_doc.SaveToFile(str(docx_pdf_path), ppl)
     pdf_doc.Close()
-
-    doc.Close()
+    pdf_doc.Dispose()
 
 
 def spire_xls_test() -> None:
     wb = Workbook()
+    wb.CustomFontFileDirectory = [str(font_path)]
     wb.Worksheets.Clear()
     sheet = wb.Worksheets.Add("Test Sheet")
+    sheet.Range["A1"].Text = "Test Text"
+    sheet.Range["A1"].Style.Font.FontName = "Roboto"
 
-    # fails in a loop
-    for pos in [(1, 1), (1, 5)]:
-        sheet.Range[pos].Value = "Test Text"
+    wb.SaveToFile(str(excel_file_path), ExcelVersion.Version2016)
+    print(f"Done save to {excel_file_path}")
 
-    wb.SaveToFile(str(file_path), ExcelVersion.Version2016)
-    print(f"Done save to {file_path}")
+    wb.Save()
+    wb.Dispose()
 
 
 def main() -> None:
-    spire_xls_test()
-    print("generating Doc and PDF")
-    spire_doc_test()
-    print("Done generating Doc")
-    spire_xls_test()
-    print("generating Doc and PDF")
-    spire_doc_test()
-    print("Done generating Doc")
-    spire_xls_test()
-    print("generating Doc and PDF")
-    spire_doc_test()
-    print("Done generating Doc")
+    threads = []
+    for f in [spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test]:
+        print(f"Starting thread for {f.__name__}")
+        thread = threading.Thread(target=f)
+        thread.start()
+        threads.append(thread)
+
+    for t in threads:
+        t.join()
+
+    # spire_xls_test()
+    # print("generating Doc and PDF")
+    # spire_doc_test()
+    # print("Done generating Doc")
+    # spire_xls_test()
+    # print("generating Doc and PDF")
+    # spire_doc_test()
+    # print("Done generating Doc")
+    # spire_xls_test()
+    # print("generating Doc and PDF")
+    # spire_doc_test()
+    # print("Done generating Doc")
 
 
 if __name__ == "__main__":
