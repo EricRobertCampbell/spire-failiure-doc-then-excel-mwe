@@ -10,10 +10,12 @@ from spire.doc import FileFormat as DocxFileFormat
 
 from pathlib import Path
 import threading
+import time
 
-excel_file_path = Path("sample_xlsx.xlsx")
-docx_file_path = Path("sample_doc.docx")
-docx_pdf_path = Path('sample_doc_pdf.pdf')
+results_folder = Path('./results')
+excel_file_path = results_folder / Path("sample_xlsx.xlsx")
+docx_file_path = results_folder / Path("sample_doc.docx")
+docx_pdf_path = results_folder / Path('sample_doc_pdf.pdf')
 
 logo_path = Path('./MainLogo.png')
 font_path = Path('./fonts')
@@ -150,17 +152,27 @@ def spire_xls_test() -> None:
     wb.Save()
     wb.Dispose()
 
+def simulated_generate_documents() -> None:
+    simulated_generate_documents_fns = [spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test]
+    for f in simulated_generate_documents_fns:
+        print(f"Running {f.__name__}")
+        f()
+        print(f"Done running {f.__name__}")
 
 def main() -> None:
-    threads = []
-    for f in [spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test, spire_xls_test, spire_doc_test]:
-        print(f"Starting thread for {f.__name__}")
-        thread = threading.Thread(target=f)
-        thread.start()
-        threads.append(thread)
+    print(f"Generating documents 1")
+    thread = threading.Thread(target=simulated_generate_documents)
+    thread.start()
+    thread.join()
+    print(f"Done generating documents 1")
 
-    for t in threads:
-        t.join()
+    time.sleep(1)
+
+    print(f"Generating documents 2")
+    thread = threading.Thread(target=simulated_generate_documents)
+    thread.start()
+    thread.join()
+    print(f"Done generating documents 2")
 
     # spire_xls_test()
     # print("generating Doc and PDF")
