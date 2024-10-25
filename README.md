@@ -1,4 +1,4 @@
-Spire.Xls and Spire.Doc - Sequential Document Generation Failure
+# Spire.Xls and Spire.Doc - Sequential Document Generation Failure
 
 This is an MRE for a bug in Spire.Xls 13.9.0 & 14.7.3 / Spire.Doc 12.71. (or some combination thereof). In some circumstances, generating a .doc file followed by a .xls file will result in a crash. In our testing, we found that generating a Word file, then converting _two or more_ Excel files to a pdf, then generating another Word document results in an unrecoverable crash. The trick also seems to be that both file kinds need to have images included in them.
 
