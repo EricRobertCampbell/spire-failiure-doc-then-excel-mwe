@@ -22,3 +22,45 @@ chmod u+x crash.py
 ```
 
 This code was run on Ubuntu 22.04.1 LTS with Python 3.9.16.
+
+## With Docker
+
+This repo also contains a Dockerfile to illustrate the crash. To run it,
+
+```
+docker build -t crash .
+docker run crash
+```
+
+In this case the result is slightly more informative:
+
+```
+Unhandled Exception: System.TypeInitializationException: TypeInitialization_Type_NoTypeAvailable
+   ---> System.TypeInitializationException: TypeInitialization_Type_NoTypeAvailable
+   ---> System.TypeInitializationException: TypeInitialization_Type_NoTypeAvailable
+   ---> System.DllNotFoundException: DllNotFound_Linux, libSkiaSharp,
+   libfontconfig.so.1: cannot open shared object file: No such file or directory                                                                                                                                                          liblibSkiaSharp.so: cannot open shared object file: No such file or directory                                                                                                                                                              libSkiaSharp: cannot open shared object file: No such file or directory                                                                                                                                                        liblibSkiaSharp: cannot open shared object file: No such file or directory                                                                                                                                                                                                                                                                                                                                                                                                               at System.Runtime.InteropServices.NativeLibrary.LoadLibErrorTracker.Throw(String) + 0x4e                                                                                                                                                   at Internal.Runtime.CompilerHelpers.InteropHelpers.FixupModuleCell(InteropHelpers.ModuleFixupCell*) + 0x10f                                                                                                                                at Internal.Runtime.CompilerHelpers.InteropHelpers.ResolvePInvokeSlow(InteropHelpers.MethodFixupCell*) + 0x35                                                                                                                              at SkiaSharp.SkiaApi.sk_colortype_get_default_8888() + 0x2d                                                                                                                                                                                at SkiaSharp.SKImageInfo..cctor() + 0x2b
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0xb9
+   Exception_EndOfInnerExceptionStack
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0x153
+   at System.Runtime.CompilerServices.ClassConstructorRunner.CheckStaticClassConstructionReturnNonGCStaticBas
+e(StaticClassConstructionContext*, IntPtr) + 0x9
+   at sprmtx..cctor() + 0x690
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0xb9
+   Exception_EndOfInnerExceptionStack
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0x153
+   at System.Runtime.CompilerServices.ClassConstructorRunner.CheckStaticClassConstructionReturnGCStaticBase(StaticClassConstructionContext*, Object) + 0x9
+   at Spire.Xls.Core.Spreadsheet.XlsPageSetupBase.PaperSizeEntry..ctor(Double, Double, MeasureUnits) + 0x1e
+   at Spire.Xls.Core.Spreadsheet.XlsPageSetupBase..cctor() + 0x6c
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0xb9
+   Exception_EndOfInnerExceptionStack
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0x153
+   at System.Runtime.CompilerServices.ClassConstructorRunner.CheckStaticClassConstructionReturnNonGCStaticBase(StaticClassConstructionContext*, IntPtr) + 0x9
+   at Spire.Xls.Core.Spreadsheet.XlsWorksheet.InitializeCollections() + 0xdd
+   at Spire.Xls.Core.Spreadsheet.XlsWorksheet..ctor(Object) + 0x82
+   at Spire.Xls.Core.Spreadsheet.Collections.XlsWorksheetsCollection.Add(String) + 0x190
+   at Spire.Xls.Core.Spreadsheet.XlsWorkbook.spra(Int32) + 0x461
+   at Spire.Xls.Workbook..ctor() + 0x44
+   at Spire.Xls.AOT.NLWorkbook.CreateWorkbook() + 0x2b
+Aborted (core dumped)
+```
