@@ -1,5 +1,6 @@
 venv
 **/*Zone.Identifier
+.out
 
 # keep the results folder, but not the contents
 results/*

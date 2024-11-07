@@ -5,12 +5,11 @@ from spire.xls.common import *
 from spire.doc import *
 from spire.doc.common import *
 from spire.doc import FileFormat as DocxFileFormat
-import math
 from pathlib import Path
 import threading
 import time
 
-logo_path = Path('./Logo.png')
+logo_path = Path('./MainLogo.png')
 
 def main() -> None:
     threads = []
@@ -22,15 +21,15 @@ def main() -> None:
         print(f"Done generating documents #{run}")
 
      # Waiting for all threads to complete
-    for thread in threads:
+    for thread_index, thread in enumerate(threads):
         thread.join()
-        print(f"word #{run} is saved.")
+        print(f"word #{thread_index} is saved.")
 
 
 def simulated_generate_documents() -> None:
     simulated_generate_documents_fns = [
         #generate_xlsx_docs
-         generate_xlsx_docs, generate_spire_doc, 
+         generate_xlsx_docs, generate_spire_doc, generate_xlsx_docs
 
     ]
     for f in simulated_generate_documents_fns:

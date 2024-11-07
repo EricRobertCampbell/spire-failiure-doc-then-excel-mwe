@@ -10,6 +10,19 @@ RUN apt-get update && \
     apt-get install -y python3.9 python3.9-venv && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# c++ environment from the dockerfile sent over by spire
+RUN apt-get update && \
+    apt-get install -y g++ && \
+    ln -sf g++ /usr/bin/c++
+RUN apt-get install -y libicu-dev
+# This had to be changed because we are on python 3.9.16
+# RUN apt-get update && \
+#     apt-get install -y python3-dev
+# RUN apt-get update && \
+#     apt-get install -y python3-pip
+RUN apt-get update && \
+    apt-get install -y unixodbc-dev
+
 # Set the default Python 3.9 as 'python3'
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 
