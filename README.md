@@ -41,3 +41,24 @@ Unhandled Exception: System.InvalidCastException: Arg_InvalidCastException
    at Spire.Doc.Base!<BaseAddress>+0x29119d0
 Aborted (core dumped)
 ```
+
+## Bug with Spire.Xls 14.9.3
+
+A different bug is present with the same code when using Spire.Xls 14.9.3. In this case, the error is
+
+```
+Unhandled Exception: System.TypeInitializationException: TypeInitialization_Type_NoTypeAvailable
+ ---> System.InvalidOperationException: The version of the native libSkiaSharp library (88.1) is incompatible with this version of SkiaSharp. Supported versions of the native libSkiaSharp library are in the range [80.3, 81.0).
+   at SkiaSharp.SkiaSharpVersion.CheckNativeLibraryCompatible(Version, Version, Boolean) + 0x271
+   at SkiaSharp.SKObject..cctor() + 0x25
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0xb9
+   Exception_EndOfInnerExceptionStack
+   at System.Runtime.CompilerServices.ClassConstructorRunner.EnsureClassConstructorRun(StaticClassConstructionContext*) + 0xaf
+   at System.Runtime.CompilerServices.ClassConstructorRunner.CheckStaticClassConstructionReturnNonGCStaticBase(StaticClassConstructionContext*, IntPtr) + 0x9
+   at SkiaSharp.SKObject.DeregisterHandle(IntPtr, SKObject) + 0x14
+   at SkiaSharp.SKObject.set_Handle(IntPtr) + 0x24
+   at SkiaSharp.SKNativeObject.Finalize() + 0x10
+   at System.Runtime.__Finalizer.DrainQueue() + 0x66
+   at System.Runtime.__Finalizer.ProcessFinalizers() + 0x3e
+[1]    13175 IOT instruction (core dumped)  ./crash_change.py
+```
