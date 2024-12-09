@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import traceback
+
 from spire.xls import *
 from spire.xls.common import *
 from spire.doc import *
@@ -10,6 +12,7 @@ import threading
 import time
 
 logo_path = Path('./MainLogo.png')
+output_dir = Path('./results')
 
 def main() -> None:
     threads = []
@@ -36,8 +39,10 @@ def simulated_generate_documents() -> None:
         print(f"Running {f.__name__}")
         try:
             f()
-        except:
-            print(f"This is a bare exception. This should catch any error that is generated.")
+        except Exception as e:
+            print(f"Error generating document:", e)
+            traceback.print_exc()
+            # print(f"This is a bare exception. This should catch any error that is generated.")
 
         print(f"Done running {f.__name__}")
 
@@ -51,7 +56,7 @@ def generate_spire_doc() -> None:
     while True:
         timestamp = int(time.time() * 1000)
         thread_id = threading.get_ident()
-        doc_filename = Path(f"./out_{thread_id}_{timestamp}.docx")
+        doc_filename = Path(f"results/out_{thread_id}_{timestamp}.docx")
         if not doc_filename.exists():
             break
         time.sleep(0.01)   
@@ -74,7 +79,7 @@ def generate_xlsx_docs() -> None:
         while True:
             timestamp = int(time.time() * 1000)
             thread_id = threading.get_ident()
-            pdf_filename = Path(f"./out_{thread_id}_{timestamp}.pdf")
+            pdf_filename = Path(f"results/out_{thread_id}_{timestamp}.pdf")
             if not pdf_filename.exists():
                 break
             time.sleep(0.01)   

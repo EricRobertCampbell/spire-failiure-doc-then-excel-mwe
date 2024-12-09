@@ -62,3 +62,46 @@ Unhandled Exception: System.TypeInitializationException: TypeInitialization_Type
    at System.Runtime.__Finalizer.ProcessFinalizers() + 0x3e
 [1]    13175 IOT instruction (core dumped)  ./crash_change.py
 ```
+
+## Bug with Spire.Xls 14.9.3 and Spire.Doc 12.12.0
+
+There is a new bug present when using Spre.Xls 14.9.3 and Spire.Doc 12.12.0 together.
+
+```
+Error generating document: Arg_NullReferenceException:   at Spire.Xls.AOT.NLWorkbook.Workbook_get_Worksheets(IntPtr, IntPtr) + 0x47
+Traceback (most recent call last):
+  File "/home/eric/documents/spire-failure-doc-then-excel-mwe/./crash_change.py", line 40, in simulated_generate_documents
+    f()
+  File "/home/eric/documents/spire-failure-doc-then-excel-mwe/./crash_change.py", line 71, in generate_xlsx_docs
+    sheet = wb.Worksheets[0]
+  File "/home/eric/documents/spire-failure-doc-then-excel-mwe/venv/lib/python3.9/site-packages/spire/xls/Workbook.py", line 2081, in Worksheets
+    intPtr = CallCFunction(GetDllLibXls().Workbook_get_Worksheets, self.Ptr)
+  File "/home/eric/documents/spire-failure-doc-then-excel-mwe/venv/lib/python3.9/site-packages/spire/xls/common/__init__.py", line 113, in CallCFunction
+    raise SpireException(info)
+spire.xls.common.SpireException: Arg_NullReferenceException:   at Spire.Xls.AOT.NLWorkbook.Workbook_get_Worksheets(IntPtr, IntPtr) + 0x47
+```
+
+This one seems to occur roughly 3 in every 5 (6 / 20) times running the program.
+
+| Run | Crash? |
+| --- | ------ |
+| 1   | N      |
+| 2   | N      |
+| 3   | N      |
+| 4   | N      |
+| 5   | N      |
+| 6   | N      |
+| 7   | N      |
+| 8   | Y      |
+| 9   | Y      |
+| 10  | Y      |
+| 11  | N      |
+| 12  | N      |
+| 13  | Y      |
+| 14  | Y      |
+| 15  | N      |
+| 16  | N      |
+| 17  | Y      |
+| 18  | N      |
+| 19  | N      |
+| 20  | N      |
