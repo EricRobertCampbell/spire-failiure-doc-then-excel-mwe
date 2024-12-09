@@ -81,7 +81,7 @@ Traceback (most recent call last):
 spire.xls.common.SpireException: Arg_NullReferenceException:   at Spire.Xls.AOT.NLWorkbook.Workbook_get_Worksheets(IntPtr, IntPtr) + 0x47
 ```
 
-This one seems to occur roughly 3 in every 5 (6 / 20) times running the program.
+This one seems to occur roughly 3 in every 10 (6 / 20) times running the program.
 
 | Run | Crash? |
 | --- | ------ |
